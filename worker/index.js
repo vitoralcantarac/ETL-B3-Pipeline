@@ -1,8 +1,12 @@
 const TICKERS_VALIDOS = ["PETR4", "VALE3", "ITUB4", "BBDC4", "MGLU3", "MXRF11", "HGLG11", "KNRI11"];
 
-const CORS = {
-  "Access-Control-Allow-Origin": "*",
-  "Content-Type": "application/json",
+const HEADERS = {
+  "Access-Control-Allow-Origin":  "*",
+  "Content-Type":                 "application/json",
+  "X-Content-Type-Options":       "nosniff",
+  "X-Frame-Options":              "DENY",
+  "Referrer-Policy":              "no-referrer",
+  "Cache-Control":                "public, max-age=60",
 };
 
 export default {
@@ -66,7 +70,7 @@ async function fetchSupabase(url, key) {
 }
 
 function json(data, status = 200) {
-  return new Response(JSON.stringify(data), { status, headers: CORS });
+  return new Response(JSON.stringify(data), { status, headers: HEADERS });
 }
 
 function diasAtras(dias) {
