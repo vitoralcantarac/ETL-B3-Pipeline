@@ -101,6 +101,22 @@ main {
 .positivo { color: var(--positive); }
 .negativo { color: var(--negative); }
 
+/* ── Skeleton ────────────────────────────────────────── */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.35; }
+}
+
+.skeleton {
+  background: var(--border);
+  border-radius: 0.35rem;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.card-skeleton .card-symbol { width: 45%; height: 0.75rem; }
+.card-skeleton .card-price  { width: 75%; height: 1.1rem;  margin: 0.6rem 0 0.4rem; }
+.card-skeleton .card-change { width: 55%; height: 0.85rem; }
+
 /* ── Gráfico ────────────────────────────────────────── */
 .chart-section {
   background: var(--surface);

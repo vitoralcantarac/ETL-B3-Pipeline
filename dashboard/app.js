@@ -63,6 +63,18 @@ async function fetchHistorico(symbol, dias) {
   return fetchComRetry(`${WORKER_URL}/historico?symbol=${symbol}&dias=${dias}`);
 }
 
+// ── Skeletons ─────────────────────────────────────────────────
+
+function renderSkeletons(containerId, quantidade) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = Array(quantidade).fill(`
+    <div class="card card-skeleton">
+      <div class="skeleton card-symbol"></div>
+      <div class="skeleton card-price"></div>
+      <div class="skeleton card-change"></div>
+    </div>`).join("");
+}
+
 // ── Cards ─────────────────────────────────────────────────────
 
 function renderCards(data, containerId, tickers) {
@@ -191,6 +203,8 @@ function startCountdown() {
 
 async function init(reiniciarCountdown = true) {
   document.getElementById("status").textContent = "Atualizando...";
+  renderSkeletons("cards-acoes", ACOES.length);
+  renderSkeletons("cards-fiis",  FIIS.length);
 
   try {
     const data = await fetchCotacoes();
