@@ -31,7 +31,29 @@ header h1 { font-size: 1.4rem; font-weight: 700; }
 
 .header-right { text-align: right; font-size: 0.85rem; color: var(--muted); }
 
-.countdown { color: var(--accent); font-size: 0.8rem; margin-top: 0.2rem; }
+.header-bottom {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.2rem;
+  justify-content: flex-end;
+}
+
+.countdown { color: var(--accent); font-size: 0.8rem; }
+
+#btn-refresh {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+#btn-refresh:hover  { border-color: var(--accent); color: var(--text); }
+#btn-refresh:active { transform: rotate(180deg); }
 
 /* ── Layout ─────────────────────────────────────────── */
 main {
