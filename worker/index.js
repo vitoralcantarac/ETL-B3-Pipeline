@@ -1,5 +1,26 @@
 const TICKERS_VALIDOS = ["PETR4", "VALE3", "ITUB4", "BBDC4", "MGLU3", "MXRF11", "HGLG11", "KNRI11"];
 
+// Rate limiter em memória: 30 req/min por IP.
+// Funciona dentro de uma mesma instância do Worker. Para produção de alta escala,
+// usar Cloudflare KV ou Durable Objects (planos pagos).
+const rateLimiter = new Map();
+const LIMITE_REQ  = 30;
+const JANELA_MS   = 60 * 1000;
+
+function isRateLimited(ip) {
+  const agora  = Date.now();
+  const chave  = `${ip}:${Math.floor(agora / JANELA_MS)}`;
+  const contagem = (rateLimiter.get(chave) || 0) + 1;
+  rateLimiter.set(chave, contagem);
+
+  // Remove entradas de janelas anteriores para não vazar memória
+  for (const k of rateLimiter.keys()) {
+    if (k !== chave) rateLimiter.delete(k);
+  }
+
+  return contagem > LIMITE_REQ;
+}
+
 const HEADERS = {
   "Access-Control-Allow-Origin":  "*",
   "Content-Type":                 "application/json",
@@ -11,6 +32,11 @@ const HEADERS = {
 
 export default {
   async fetch(request, env) {
+    const ip   = request.headers.get("CF-Connecting-IP") || "desconhecido";
+    if (isRateLimited(ip)) {
+      return json({ error: "Muitas requisições. Tente novamente em 1 minuto." }, 429);
+    }
+
     const url = new URL(request.url);
     const path = url.pathname;
 
