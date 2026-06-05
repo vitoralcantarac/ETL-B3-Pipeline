@@ -1,0 +1,12 @@
+name               = "etl-b3-pipeline"
+main               = "index.js"
+compatibility_date = "2024-01-01"
+workers_dev        = true
+preview_urls       = false
+
+# Variáveis de ambiente secretas — configure via terminal:
+#   wrangler secret put SUPABASE_URL
+#   wrangler secret put SUPABASE_KEY
+#
+# Use a anon key do Supabase aqui (não a service_role).
+# O Worker só faz leitura — a anon key + RLS garantem segurança.

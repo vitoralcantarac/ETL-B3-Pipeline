@@ -59,6 +59,9 @@ CREATE POLICY "leitura_publica"
     FOR SELECT
     USING (true);
 
+-- Permite que a anon key leia a view via Cloudflare Worker
+GRANT SELECT ON ultima_cotacao TO anon;
+
 
 -- ------------------------------------------------------------
 -- 5. Verificação final
