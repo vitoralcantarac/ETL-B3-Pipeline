@@ -115,6 +115,19 @@ function renderTabela(data) {
 async function renderGrafico(symbol, dias) {
   const data = await fetchHistorico(symbol, dias);
 
+  const semDados = document.getElementById("chart-sem-dados");
+  const canvas   = document.getElementById("chart-preco");
+
+  if (data.length === 0) {
+    if (chart) { chart.destroy(); chart = null; }
+    canvas.hidden  = true;
+    semDados.hidden = false;
+    return;
+  }
+
+  canvas.hidden   = false;
+  semDados.hidden = true;
+
   const labels = data.map(d =>
     fmtBRT(d.collected_at, { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })
   );
