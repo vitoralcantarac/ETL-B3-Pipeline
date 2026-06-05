@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monitor B3 — Ações e FIIs</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <h1>📈 Monitor B3</h1>
+    <div class="header-right">
+      <div id="ultima-atualizacao">Carregando dados...</div>
+      <div class="countdown">Próxima atualização em <span id="countdown">05:00</span></div>
+    </div>
+  </header>
+
+  <main>
+    <div class="status-bar" id="status"></div>
+
+    <p class="section-label">Ações</p>
+    <div class="cards-grid" id="cards-acoes"></div>
+
+    <p class="section-label">FIIs</p>
+    <div class="cards-grid" id="cards-fiis"></div>
+
+    <div class="chart-section">
+      <div class="chart-controls">
+        <h2>Histórico de Preço</h2>
+        <div class="chart-controls-right">
+          <select id="select-ativo">
+            <option value="PETR4">PETR4</option>
+            <option value="VALE3">VALE3</option>
+            <option value="ITUB4">ITUB4</option>
+            <option value="BBDC4">BBDC4</option>
+            <option value="MGLU3">MGLU3</option>
+            <option value="MXRF11">MXRF11</option>
+            <option value="HGLG11">HGLG11</option>
+            <option value="KNRI11">KNRI11</option>
+          </select>
+          <button class="btn-periodo ativo" data-dias="7">7d</button>
+          <button class="btn-periodo" data-dias="30">30d</button>
+          <button class="btn-periodo" data-dias="90">90d</button>
+        </div>
+      </div>
+      <div class="chart-wrapper">
+        <canvas id="chart-preco"></canvas>
+      </div>
+    </div>
+
+    <div class="table-section">
+      <h2>Visão Geral</h2>
+      <table id="tabela-ativos">
+        <thead>
+          <tr>
+            <th>Ativo</th>
+            <th>Preço</th>
+            <th>Variação</th>
+            <th>Volume</th>
+            <th>Market Cap</th>
+            <th>Atualizado</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
