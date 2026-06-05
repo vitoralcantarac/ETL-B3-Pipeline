@@ -1,6 +1,7 @@
 # 📈 Monitor B3 — ETL Pipeline de Dados Financeiros
 
 ![ETL Pipeline](https://github.com/vitoralcantarac/ETL-B3-Pipeline/actions/workflows/etl_pipeline.yml/badge.svg)
+![Tests](https://github.com/vitoralcantarac/ETL-B3-Pipeline/actions/workflows/tests.yml/badge.svg)
 ![Deploy Dashboard](https://github.com/vitoralcantarac/ETL-B3-Pipeline/actions/workflows/pages.yml/badge.svg)
 
 Pipeline ETL automatizada que coleta cotações de **ações e FIIs da B3** 3x por dia, armazena no Supabase (PostgreSQL) e exibe em um dashboard interativo publicado no GitHub Pages.
@@ -182,3 +183,23 @@ ETL-B3-Pipeline/
 | Banco | Supabase | Schema em `sql/schema.sql` |
 | API | Cloudflare Workers | `wrangler deploy` na pasta `worker/` |
 | Dashboard | GitHub Pages | Automático a cada push em `main` |
+
+---
+
+## 🎓 Aprendizados
+
+**O que aprendi construindo esse projeto:**
+
+- **RLS no Supabase tem nuances**: views precisam de `GRANT SELECT` explícito para a role `anon` — não herdam automaticamente as políticas da tabela base.
+- **Tipos nullable do pandas não serializam para JSON**: colunas `Int64` geram `pd.NA` em vez de `None`. Solução: `df.where(df.notna(), other=None)` antes do upsert.
+- **Idempotência requer design intencional**: sem timestamp truncado na hora + índice `UNIQUE`, cada re-execução geraria duplicatas silenciosas no banco.
+- **`UNIQUE` com expressão não funciona em `CONSTRAINT` inline**: `CONSTRAINT uq UNIQUE (symbol, DATE_TRUNC(...))` é inválido no PostgreSQL — precisa ser `CREATE UNIQUE INDEX`.
+- **Secrets com newline quebram conexões HTTP silenciosamente**: copiar e colar de alguns editores adiciona `\n` no final, causando `InvalidURL` profundo na stack do httpx.
+- **Cloudflare Workers em modo não-interativo**: o terminal integrado do VS Code não exibe prompts do Wrangler — a solução foi passar o valor via pipe no PowerShell.
+- **`anon key` vs `service_role key`**: a `anon key` é restrita pelo RLS (leitura pública), a `service_role` bypassa tudo — cada uma tem seu lugar certo na arquitetura.
+
+**O que faria diferente numa próxima versão:**
+
+- Separaria as variáveis com nomes distintos (`SUPABASE_SERVICE_KEY` e `SUPABASE_ANON_KEY`) para tornar o papel de cada chave explícito no código.
+- Adicionaria testes de integração com mock da brapi.dev para cobrir `extract.py` sem depender de conexão real.
+- Usaria migrações versionadas (ex: Flyway ou scripts numerados) em vez de um único `schema.sql` para facilitar evoluções do banco.
