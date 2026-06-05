@@ -44,16 +44,23 @@ function fmtBRT(utcStr, opcoes) {
 
 // ── Fetch ─────────────────────────────────────────────────────
 
+async function fetchComRetry(url, tentativas = 3) {
+  for (let i = 0; i < tentativas; i++) {
+    try {
+      const res = await fetch(url);
+      if (res.ok) return res.json();
+    } catch (_) {}
+    if (i < tentativas - 1) await new Promise(r => setTimeout(r, 1500));
+  }
+  throw new Error(`Falha após ${tentativas} tentativas: ${url}`);
+}
+
 async function fetchCotacoes() {
-  const res = await fetch(`${WORKER_URL}/cotacoes`);
-  if (!res.ok) throw new Error("Falha ao buscar cotações");
-  return res.json();
+  return fetchComRetry(`${WORKER_URL}/cotacoes`);
 }
 
 async function fetchHistorico(symbol, dias) {
-  const res = await fetch(`${WORKER_URL}/historico?symbol=${symbol}&dias=${dias}`);
-  if (!res.ok) throw new Error("Falha ao buscar histórico");
-  return res.json();
+  return fetchComRetry(`${WORKER_URL}/historico?symbol=${symbol}&dias=${dias}`);
 }
 
 // ── Cards ─────────────────────────────────────────────────────
