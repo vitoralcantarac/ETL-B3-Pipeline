@@ -1,4 +1,5 @@
 import logging
+import os
 import sys
 
 from etl.extract import extract
@@ -13,8 +14,25 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
+VARS_OBRIGATORIAS = ["BRAPI_TOKEN", "SUPABASE_URL", "SUPABASE_KEY"]
+
+
+def validar_env() -> None:
+    ausentes = [v for v in VARS_OBRIGATORIAS if not os.environ.get(v)]
+    if ausentes:
+        raise EnvironmentError(
+            f"Variáveis de ambiente obrigatórias ausentes: {', '.join(ausentes)}\n"
+            f"Configure o arquivo .env ou os Secrets do GitHub Actions."
+        )
+
 
 def run() -> None:
+    try:
+        validar_env()
+    except EnvironmentError as e:
+        logger.error("Configuração inválida — %s", e)
+        sys.exit(1)
+
     logger.info("Pipeline iniciada")
 
     try:
