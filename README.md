@@ -203,3 +203,4 @@ ETL-B3-Pipeline/
 - Separaria as variáveis com nomes distintos (`SUPABASE_SERVICE_KEY` e `SUPABASE_ANON_KEY`) para tornar o papel de cada chave explícito no código.
 - Adicionaria testes de integração com mock da brapi.dev para cobrir `extract.py` sem depender de conexão real.
 - Usaria migrações versionadas (ex: Flyway ou scripts numerados) em vez de um único `schema.sql` para facilitar evoluções do banco.
+- Automatizaria o deploy do Cloudflare Worker via GitHub Actions (`wrangler deploy` no CI) em vez de rodar manualmente no terminal — é o único componente do projeto que ainda exige intervenção manual a cada atualização.
